@@ -1,0 +1,122 @@
+.fruite .tab-class .nav-item a.active {
+  background: var(--bs-secondary) !important;
+}
+
+.fruite .tab-class .nav-item a.active span {
+  color: var(--bs-white) !important;
+}
+
+/* Kiểu cho danh mục */
+.fruite .fruite-categorie .fruite-name {
+  line-height: 40px;
+}
+
+.fruite .fruite-categorie .fruite-name a {
+  transition: 0.5s;
+}
+
+.fruite .fruite-categorie .fruite-name a:hover {
+  color: var(--bs-secondary);
+}
+
+/* Kiểu cho thẻ sản phẩm */
+.fruite .fruite-item {
+  height: 500px; /* Chiều cao cố định cho toàn bộ thẻ */
+  transition: 0.5s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ngăn nội dung tràn ra ngoài */
+}
+
+.fruite .fruite-item:hover {
+  box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
+}
+
+/* Kiểu cho container hình ảnh */
+.fruite .fruite-item .fruite-img {
+  overflow: hidden;
+  transition: 0.5s;
+  border-radius: 10px 10px 0 0;
+  width: 100%;
+  height: 250px; /* Chiều cao cố định cho hình ảnh */
+  flex-shrink: 0; /* Ngăn container hình ảnh bị co lại */
+}
+
+/* Kiểu cho hình ảnh */
+.fruite .fruite-item .fruite-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo hình ảnh lấp đầy container mà không bị méo */
+  transition: 0.5s;
+}
+
+.fruite .fruite-item .fruite-img img:hover {
+  transform: scale(1.3);
+}
+
+/* Kiểu cho phần nội dung bên dưới hình ảnh */
+.fruite .fruite-item .p-4 {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* Giới hạn chiều cao và cắt bớt văn bản nếu quá dài */
+.fruite .fruite-item h4 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Ngăn tên sản phẩm xuống dòng */
+}
+
+.fruite .fruite-item p {
+  font-size: 13px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Giới hạn mô tả trong 2 dòng */
+  -webkit-box-orient: vertical;
+}
+
+/* Căn chỉnh giá và nút "Add to cart" */
+.fruite .fruite-item .d-flex {
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.fruite .fruite-item .text-dark {
+  font-size: 15px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.fruite .fruite-item .btnAddToCartHomepage {
+  width: fit-content;
+  margin-top: auto;
+}
+
+/* Đảm bảo container cha không can thiệp */
+.fruite .row,
+.fruite .col-md-6,
+.fruite .col-lg-4,
+.fruite .col-xl-3 {
+  height: auto !important;
+}
+
+/* Điều chỉnh cho màn hình nhỏ */
+@media (max-width: 768px) {
+  .fruite .fruite-item {
+    height: 450px; /* Giảm chiều cao trên màn hình nhỏ */
+  }
+  .fruite .fruite-item .fruite-img {
+    height: 200px; /* Giảm chiều cao hình ảnh */
+  }
+}
+

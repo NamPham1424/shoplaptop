@@ -1,0 +1,60 @@
+/* Đảm bảo carousel lấp đầy không gian mới */
+.carousel {
+  width: 100%;
+}
+
+/* Đặt chiều cao cố định cho carousel */
+.carousel-inner {
+  height: 450px; /* Tăng chiều cao để cân đối với chiều rộng */
+  width: 100%;
+}
+
+/* Đảm bảo carousel-item lấp đầy không gian */
+.carousel-item {
+  height: 100%;
+  width: 100%;
+}
+
+/* Đảm bảo hình ảnh lấp đầy không gian mà không bị méo */
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Đảm bảo nút không bị ảnh hưởng */
+.carousel-item a {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  background: linear-gradient(rgba(255, 181, 36, 0.7), rgba(255, 181, 36, 0.7));
+  z-index: 1;
+  white-space: nowrap;
+  padding: 15px 30px;
+}
+
+/* Điều chỉnh cho màn hình nhỏ */
+@media (max-width: 768px) {
+  .carousel-inner {
+    height: 350px;
+  }
+
+  .hero-header h1 {
+    font-size: 2rem;
+  }
+
+  .hero-header .position-relative {
+    width: 100%;
+  }
+
+  .hero-header .position-relative input {
+    width: 100% !important;
+  }
+
+  .hero-header .position-relative button {
+    right: 0 !important;
+  }
+}
