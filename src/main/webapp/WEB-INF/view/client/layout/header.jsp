@@ -73,7 +73,7 @@
             <a class="nav-link text-uppercase fw-semibold text-dark" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-uppercase fw-semibold text-dark" href="/">Shop</a>
+            <a class="nav-link text-uppercase fw-semibold text-dark" href="/products">Shop</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-uppercase fw-semibold text-dark" href="#" role="button" data-bs-toggle="dropdown">
@@ -98,7 +98,7 @@
           <!-- Cart -->
           <a href="/cart" class="text-dark position-relative">
             <i class="fa fa-shopping-bag fa-lg"></i>
-            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-circle">
+            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-circle" id="sumCart">
              ${sessionScope.sum}
             </span>
           </a>
@@ -137,7 +137,7 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#">
+                <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="/order-history">
                   <i class="fa fa-box text-success"></i> <span>Purchase History</span>
                 </a>
               </li>
@@ -164,7 +164,7 @@
         </div>
             </c:if>
             <c:if test="${empty pageContext.request.userPrincipal }">
-            <a href="/login" class="text-dark position-relative">
+            <a href="/login" class="a-login text-dark position-relative">
             Login
            </a>
             </c:if>

@@ -39,6 +39,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <!-- Template Stylesheet -->
     <link rel="stylesheet" href="/client/css/style.css" />
     <link rel="stylesheet" href="/client/css/shopcss.css" />
+
+    <meta name="_csrf" content="${_csrf.token}" />
+   
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}" />
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- Spinner Start -->
@@ -106,8 +116,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 <li class="nav-item">
                   <a
                     class="d-flex m-2 py-2 bg-light rounded-pill active"
-                    data-bs-toggle="pill"
-                    href="#tab-1"
+                    href="/products"
                   >
                     <span class="text-dark" style="width: 130px"
                       >All Products</span
@@ -180,7 +189,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                                 />
                                 đ
                               </p>
-                              <form
+                              <!-- <form
                                 action="/add-product-to-cart/${product.id}"
                                 method="post"
                               >
@@ -188,17 +197,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                                   type="hidden"
                                   name="${_csrf.parameterName}"
                                   value="${_csrf.token}"
-                                />
-                                <button
-                                  class="btnAddToCartHomepage mx-auto btn border border-secondary rounded-pill px-3 text-primary"
-                                  type="submit"
-                                >
+                                /> -->
+                          
+                                  <button data-product-id="${product.id}"Add commentMore actions
+                                  class="btnAddToCartHomepage mx-auto btn border border-secondary rounded-pill px-3 text-primary">
                                   <i
-                                    class="fa fa-shopping-bag me-2 text-primary"
-                                  ></i>
+                                      class="fa fa-shopping-bag me-2 text-primary"></i>
                                   Add to cart
-                                </button>
-                              </form>
+                              </button>
+                              <!-- </form> -->
                             </div>
                           </div>
                         </div>
@@ -256,6 +263,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <script src="/client/lib/waypoints/waypoints.min.js"></script>
     <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
     <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
     <script src="/client/js/main.js"></script>
   </body>
 </html>

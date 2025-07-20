@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> <%@taglib prefix="c"
 uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,12 +15,17 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
     <meta name="author" content="Hỏi Dân IT" />
     <title>Manage Product</title>
-
+ 
     <link href="/css/styles.css" rel="stylesheet" />
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
     ></script>
+   
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
   </head>
 
   <body class="sb-nav-fixed">
@@ -60,7 +67,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                   <tr>
                     <th>${product.id}</th>
                     <td>${product.name}</td>
-                    <td>${product.price}</td>
+                    <td><fmt:formatNumber value="${product.price}" type="number"  />đ</td>
                     <td>${product.factory}</td>
                     <td>
                       <a
@@ -83,6 +90,37 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                 </c:forEach>
               </tbody>
             </table>
+
+            <hr />
+
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
+                   href="/admin/product?page=${currentPage - 1}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                  <li class="page-item">
+                    <a class="${(loop.index + 1) eq currentPage ? 'active page-link'  : 'page-link'}" 
+                    href="/admin/product?page=${loop.index + 1}">
+                  ${loop.index +1}
+                  </a>
+                  </li>
+
+                </c:forEach>
+
+              
+           
+                <li class="page-item">
+                  <a class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
+                   href="/admin/product?page=${currentPage + 1}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </main>
         <jsp:include page="../layout/footer.jsp" />

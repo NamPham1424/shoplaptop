@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%> 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +35,66 @@
               <li class="breadcrumb-item "><a href="/admin">Dashboard</a></li>
               <li class="breadcrumb-item active">Orders</li>
             </ol>
-         <div>Table Order</div>
+            <hr />
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Receiver Name</th>
+                  <th>Receiver Address</th>
+                  <th>Total Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach var="order" items="${orders}">
+                  <tr>
+                    <td>${order.id}</td>
+                    <td>${order.receiverName}</td>
+                    <td>${order.receiverAddress}</td>
+                    <td><fmt:formatNumber value="${order.totalPrice}" type="number" groupingUsed="true" /> đ</td>
+
+                    <td>${order.status}</td>
+                    <td>
+                      <a href="/admin/order/${order.id}" class="btn btn-info btn-sm">Detail</a>
+                      <a href="/admin/order/update/${order.id}" class="btn btn-warning btn-sm">Update</a>
+                      <a href="/admin/order/${order.id}" class="btn btn-danger btn-sm" 
+                         onclick="return confirm('Are you sure you want to delete this order?')">Delete</a>
+                    </td>
+                  </tr>
+                </c:forEach>
+              </tbody>
+            </table>
+            <hr>
+
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="${(1 eq currentPage ? 'disabled page-link' : 'page-link')}"
+                   href="/admin/order?page=${currentPage - 1}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                  <li class="page-item">
+                    <a class="${(loop.index + 1)  eq currentPage ? 'active page-link' : 'page-link'}" 
+                    href="/admin/order?page=${loop.index + 1}">
+                      ${loop.index + 1}
+                    </a>
+                  </li>
+      
+                </c:forEach>
+              
+                <li class="page-item">
+                  <a class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
+                   href="/admin/order?page=${currentPage +1}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+
           </div>
         </main>
        <jsp:include page="../layout/footer.jsp" />

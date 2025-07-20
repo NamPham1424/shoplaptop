@@ -1,22 +1,29 @@
 package com.example.shoplaptop.service;
 
+import java.beans.Transient;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.shoplaptop.domain.Cart;
 import com.example.shoplaptop.domain.CartDetail;
 import com.example.shoplaptop.domain.Order;
 import com.example.shoplaptop.domain.OrderDetail;
 import com.example.shoplaptop.domain.Product;
+import com.example.shoplaptop.domain.Product_;
 import com.example.shoplaptop.domain.User;
+import com.example.shoplaptop.domain.dto.ProductCriteriaDTO;
 import com.example.shoplaptop.repository.CartDetailRepository;
 import com.example.shoplaptop.repository.CartRepository;
 import com.example.shoplaptop.repository.OrderDetailRepository;
 import com.example.shoplaptop.repository.OrderRepository;
 import com.example.shoplaptop.repository.ProductRepository;
+import com.example.shoplaptop.service.specification.ProductSpecs;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -47,10 +54,158 @@ public class ProductService {
     public Product createProduct(Product pr) {
         return this.productRepository.save(pr);
     }
-    
-    public List<Product> fetchProducts() {
-        return this.productRepository.findAll();
+
+
+
+    private Specification<Product> nameLike(String name) {
+        return (root, query, criteriaBuilder) 
+        -> criteriaBuilder.like(root.get(Product_.NAME), "%" + name + "%");
     }
+
+    public Page<Product> fetchProducts(Pageable page) {
+        return this.productRepository.findAll(page);
+    }
+
+
+    public Page<Product> fetchProductsWithSpec(Pageable page, ProductCriteriaDTO productCriteriaDTO) {
+
+        
+        if (productCriteriaDTO.getFactory() == null && productCriteriaDTO.getPrice() == null) {
+            return this.productRepository.findAll(page);
+        }
+          
+        
+        Specification<Product> combinedSpec = Specification.where(null);
+
+
+
+
+        if (productCriteriaDTO.getFactory() != null && productCriteriaDTO.getFactory().isPresent()) {
+            Specification<Product> currentSpecs = ProductSpecs.matchFactories(productCriteriaDTO.getFactory().get());
+            combinedSpec = combinedSpec.and(currentSpecs);
+        }
+        if (productCriteriaDTO.getPrice() != null &&productCriteriaDTO.getPrice().isPresent()) {
+            Specification<Product> currentSpecs = ProductSpecs.matchFactories(productCriteriaDTO.getFactory().get());
+            combinedSpec = combinedSpec.and(currentSpecs);
+        }
+
+
+     
+
+
+        return this.productRepository.findAll(combinedSpec, page);
+    }
+    
+
+    public Page<Product> fetchFactoryProductWithSpec(Pageable pageable, String factory) {
+        return this.productRepository.findAll(ProductSpecs.matchFactory(factory), pageable);
+    }
+
+    public Page<Product> fetchFactoriesProductWithSpec(Pageable pageable, List<String> factory) {
+        return this.productRepository.findAll(ProductSpecs.matchFactories(factory), pageable);
+    }
+
+    
+
+
+    public Page<Product> fetchPriceMinProductsWithSpec(Pageable pageable, double price) {
+        return this.productRepository.findAll(ProductSpecs.minPrice(price), pageable);
+    }
+
+    public Page<Product> fetchPriceMaxProductsWithSpec(Pageable pageable, double price) {
+        return this.productRepository.findAll(ProductSpecs.maxPrice(price), pageable);
+    }
+
+    public Page<Product> fetchMatchPriceProductWithSpec(Pageable pageable, String price) {
+
+        double min = 0;
+        double max = 0;
+
+        switch (price) {
+            case "3-toi-15-tr":
+                min = 3000000;
+                max = 15000000;
+                return this.productRepository.findAll(ProductSpecs.matchPrice(min, max), pageable);
+
+            case "15-toi-20-tr":
+                min = 15000000;
+                max = 20000000;
+                return this.productRepository.findAll(ProductSpecs.matchPrice(min, max), pageable);
+
+            case "20-toi-30-tr":
+                min = 20000000;
+                max = 30000000;
+                return this.productRepository.findAll(ProductSpecs.matchPrice(min, max), pageable);
+
+            case "30-toi-50-tr":
+                min = 30000000;
+                max = 50000000;
+                return this.productRepository.findAll(ProductSpecs.matchPrice(min, max), pageable);
+
+            case "50-toi-80-tr":
+                min = 30000000;
+                max = 50000000;
+                return this.productRepository.findAll(ProductSpecs.matchPrice(min, max), pageable);
+
+            default:
+                return this.productRepository.findAll(pageable);
+
+        }
+
+    }
+    
+
+
+    public Specification<Product> buildPriceSpecification(List<String> price) {
+        Specification<Product> combinedSpec = Specification.where(null);
+
+       
+        for (String p : price) {
+            double min = 0;
+            double max = 0;
+
+            switch (p) {
+                case "duoi-15-tr":
+                    min = 1;
+                    max = 15000000;
+                 
+                    break;
+
+                case "15-toi-20-tr":
+                    min = 15000000;
+                    max = 20000000;
+                   
+                    break;
+                case "20-toi-30-tr":
+                    min = 20000000;
+                    max = 30000000;
+                  
+                    break;
+                case "30-toi-50-tr":
+                    min = 30000000;
+                    max = 50000000;
+                  
+                    break;
+                case "tren-50-tr":
+                    min = 50000000;
+                    max = 90000000;
+                
+                    break;
+
+            }
+            if (min != 0 && max != 0) {
+                Specification<Product> rangeSpec = ProductSpecs.matchMultiplePrice(min, max);
+                combinedSpec = combinedSpec.or(rangeSpec);
+
+            }
+
+        }
+       
+        return combinedSpec;
+
+    }
+    
+
 
     // public  Optional<Product> getProductByName(String name) {
     //     return this.productRespository.findByName(name);
@@ -64,7 +219,7 @@ public class ProductService {
        return this.productRepository.findById(id);
    }
     
-   public void handleAddProductToCart(String email, long productId, HttpSession session) {
+  public void handleAddProductToCart(String email, long productId, HttpSession session, long  quantity) {
        //check user co cart chua ? neu chua -> tao moi
        User user = this.userService.getUserByEmail(email);
        if (user != null) {
@@ -92,7 +247,7 @@ public class ProductService {
                    cd.setCart(cart);
                    cd.setProduct(realProduct);
                    cd.setPrice(realProduct.getPrice());
-                   cd.setQuantity(1);
+                   cd.setQuantity(quantity);
                    this.cartDetailRepository.save(cd);
 
                    int Sum = cart.getSum() + 1;
@@ -100,7 +255,7 @@ public class ProductService {
                    this.cartRepository.save(cart);
                    session.setAttribute("sum", Sum);
                } else {
-                   oldDetail.setQuantity(oldDetail.getQuantity() + 1);
+                   oldDetail.setQuantity(oldDetail.getQuantity() + quantity);
                    this.cartDetailRepository.save(oldDetail);
                }
 
@@ -151,24 +306,35 @@ public class ProductService {
            }
        }
    }
- 
-   public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress, String receiverPhone) {
-    // Tạo đơn hàng
+        @Transactional
+        public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress,
+                String receiverPhone) {
+    // Bước 1: Lấy giỏ hàng theo người dùng
+    Cart cart = this.cartRepository.findByUser(user);
+   
+
+   
+    if (cart != null) {
+
+        
+        List<CartDetail> cartDetails = cart.getCartDetails();
+       
+       
+        if (cartDetails != null) {
+             // Tạo đơn hàng
     Order order = new Order();
     order.setUser(user);
     order.setReceiverName(receiverName);
     order.setReceiverAddress(receiverAddress);
     order.setReceiverPhone(receiverPhone);
+    order.setStatus("PENDING");
+    double sum = 0;
+    for (CartDetail cd : cartDetails) {
+        sum += cd.getPrice();
+    }
+    order.setTotalPrice(sum);
+    
     order = this.orderRepository.save(order);
-
-    // Bước 1: Lấy giỏ hàng theo người dùng
-    Cart cart = this.cartRepository.findByUser(user);
-    if (cart != null) {
-
-        
-        List<CartDetail> cartDetails = cart.getCartDetails();
-        if (cartDetails != null) {
-            
             // Tạo chi tiết đơn hàng
             for (CartDetail cd : cartDetails) {
                 
